@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { Btn, Input } from '../../components/ui';
 import toast from 'react-hot-toast';
-import { Zap, CheckCircle, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Zap, CheckCircle, ArrowRight, ArrowLeft, X } from 'lucide-react';
 
 const NICHES = ['Tech','Beauty','Fashion','Fitness','Food','Travel','Gaming','Education','Finance','Lifestyle','Music','Art','Other'];
 
@@ -23,6 +23,206 @@ const SCORE_COLORS = {
   REVIEW:   'var(--gold)',
 };
 
+/* ─────────────────────────────────────────────────────────────
+   TermsModal — shows Creator or Brand T&C based on role prop
+───────────────────────────────────────────────────────────── */
+function TermsModal({ role, onClose }) {
+  return (
+    <div style={{
+      position:'fixed', inset:0, zIndex:1000,
+      background:'rgba(0,0,0,0.75)',
+      display:'flex', alignItems:'center', justifyContent:'center',
+      padding:16,
+    }}>
+      <div style={{
+        background:'var(--s1)', border:'1px solid var(--border)',
+        borderRadius:'var(--r2)', width:'100%', maxWidth:560,
+        maxHeight:'85vh', display:'flex', flexDirection:'column',
+        overflow:'hidden',
+      }}>
+
+        {/* ── Header ── */}
+        <div style={{
+          display:'flex', alignItems:'center', justifyContent:'space-between',
+          padding:'18px 22px', borderBottom:'1px solid var(--border)', flexShrink:0,
+        }}>
+          <div>
+            <h2 style={{ fontFamily:'var(--fd)', fontWeight:800, fontSize:16, margin:0 }}>
+              {role === 'brand' ? '🏢 Brand Terms & Conditions' : '✨ Creator Terms & Conditions'}
+            </h2>
+            <p style={{ fontSize:11, color:'var(--t3)', margin:'3px 0 0' }}>
+              Please read carefully before registering on CreatoKite
+            </p>
+          </div>
+          <button onClick={onClose} style={{
+            background:'none', border:'none', cursor:'pointer',
+            color:'var(--t2)', padding:4, borderRadius:6,
+            display:'flex', alignItems:'center',
+          }}>
+            <X size={18}/>
+          </button>
+        </div>
+
+        {/* ── Scrollable Body ── */}
+        <div style={{ overflowY:'auto', padding:'20px 22px', flex:1, fontSize:13, color:'var(--t2)', lineHeight:1.75 }}>
+          <p style={{ color:'var(--t3)', fontSize:11, marginBottom:18 }}>
+            Effective immediately upon registration · CreatoKite Technologies
+          </p>
+
+          {/* ══ CREATOR T&C ══ */}
+          {role === 'creator' && (<>
+
+            <TC title="1. Platform Role">
+              CreatoKite acts as a campaign coordination and creator participation platform connecting
+              brands and creators for collaborative influencer campaigns. CreatoKite does not guarantee
+              campaign allocation, fixed earnings, brand selection, or creator visibility in every campaign.
+              Participation remains opportunity-based.
+            </TC>
+
+            <TC title="2. Creator Participation Model">
+              <ul style={{ paddingLeft:18, margin:'6px 0', lineHeight:2 }}>
+                <li>Creators shall not be permanently assigned or exclusively mapped to any individual brand.</li>
+                <li>Campaign opportunities are released on creator dashboards based on platform campaigns.</li>
+                <li>Creators may voluntarily accept or reject campaigns.</li>
+                <li>Acceptance does not guarantee final content selection or publishing rights.</li>
+              </ul>
+            </TC>
+
+            <TC title="3. Campaign Acceptance">
+              Each campaign on your dashboard will contain: campaign duration, submission deadline,
+              content requirements, platform rules, compensation model, and deliverables.
+              Failure to respond within the campaign window may result in automatic expiration.
+            </TC>
+
+            <TC title="4. Content Submission & Audit Rights">
+              Upon campaign acceptance you may submit content assets. CreatoKite reserves the right
+              to review, audit, reject, edit, shortlist and optimise content.
+              Submission does not guarantee selection.
+            </TC>
+
+            <TC title="5. Internal Selection Mechanism">
+              CreatoKite may internally shortlist top-performing creatives (e.g. Top 5 videos) for
+              brand review. Selection criteria may include quality, hook rate, creativity, compliance,
+              engagement potential and brand fit. Selection decisions are final.
+            </TC>
+
+            <TC title="6. Content Distribution Rights">
+              Creators acknowledge that selected campaign creatives may be distributed across
+              participating creators for campaign execution. No creator shall claim exclusive
+              ownership over campaign execution rights after approval.
+            </TC>
+
+            <TC title="7. Creator Identity Confidentiality">
+              CreatoKite may withhold your identity from brands during internal content selection.
+              Brands may receive campaign results without disclosure of selected creator identities.
+            </TC>
+
+            <TC title="8. Earnings Policy">
+              Campaign earnings depend on participation, deliverable completion, compliance and
+              campaign rules. CreatoKite does not guarantee fixed income.
+            </TC>
+
+            <TC title="9. Prohibited Actions">
+              <ul style={{ paddingLeft:18, margin:'6px 0', lineHeight:2 }}>
+                <li>Do not leak campaign information or contact brands directly.</li>
+                <li>Do not reveal internal workflows or manipulate analytics.</li>
+                <li>Do not submit copied content, use bots, or re-upload restricted assets.</li>
+              </ul>
+            </TC>
+
+            <TC title="10. Intellectual Property">
+              Original content ownership remains with the creator unless campaign licensing applies.
+              Creators grant CreatoKite limited campaign usage rights upon submission.
+            </TC>
+
+          </>)}
+
+          {/* ══ BRAND T&C ══ */}
+          {role === 'brand' && (<>
+
+            <TC title="1. Campaign Package Model">
+              Brands purchase creator participation packages (e.g. 20 / 40 / 50 creators).
+              Package selection determines your campaign pool size.
+            </TC>
+
+            <TC title="2. Participation-Based Delivery">
+              Campaigns operate through participation pools and not fixed creator assignments.
+              Creator availability may vary per campaign cycle.
+            </TC>
+
+            <TC title="3. Content Selection Model">
+              Multiple creators may submit content. CreatoKite audits and shortlists creatives
+              before presentation to the brand. You will receive only reviewed, shortlisted content.
+            </TC>
+
+            <TC title="4. Confidential Workflow">
+              Creator identities may remain confidential during campaign processing.
+              CreatoKite does not disclose creator personal information without consent.
+            </TC>
+
+            <TC title="5. Performance Disclaimer">
+              CreatoKite provides no guarantee of sales, ROI, reach, virality or engagement outcomes.
+              Campaign performance depends on multiple external factors.
+            </TC>
+
+            <TC title="6. Approval Rights">
+              Brands may approve or reject shortlisted creatives presented for their campaign.
+              Approved assets may be distributed within the campaign creator network.
+            </TC>
+
+            <TC title="7. Payment Terms">
+              Campaigns will only go live after full payment confirmation.
+              Refunds are subject to CreatoKite's refund policy.
+            </TC>
+
+            <TC title="8. Content Usage">
+              Approved creative assets may be distributed within the campaign creator network
+              solely for campaign execution purposes.
+            </TC>
+
+          </>)}
+
+          <p style={{
+            marginTop:20, padding:'12px 14px',
+            background:'rgba(108,99,255,0.08)',
+            border:'1px solid rgba(108,99,255,0.2)',
+            borderRadius:8, fontSize:12, color:'var(--p2)',
+          }}>
+            📩 Questions? Contact us at <strong>support@creatokite.com</strong>
+          </p>
+        </div>
+
+        {/* ── Footer ── */}
+        <div style={{
+          padding:'14px 22px', borderTop:'1px solid var(--border)',
+          flexShrink:0, display:'flex', justifyContent:'flex-end',
+        }}>
+          <Btn variant="primary" onClick={onClose}
+            style={{ display:'inline-flex', alignItems:'center', gap:6 }}>
+            <CheckCircle size={14}/> I've Read the Terms
+          </Btn>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+/* Small helper to render each T&C section */
+function TC({ title, children }) {
+  return (
+    <div style={{ marginBottom:18 }}>
+      <h3 style={{ fontFamily:'var(--fd)', fontSize:13, fontWeight:700, color:'var(--t1)', marginBottom:5 }}>
+        {title}
+      </h3>
+      <div style={{ color:'var(--t2)', fontSize:13 }}>{children}</div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ScoreMini — circular CAS score display on success screen
+───────────────────────────────────────────────────────────── */
 function ScoreMini({ score, badge }) {
   const color = score>=75?'var(--acc2)':score>=50?'var(--gold)':'var(--rose)';
   const r=28, circ=2*Math.PI*r;
@@ -57,16 +257,20 @@ function ScoreMini({ score, badge }) {
   );
 }
 
+/* ─────────────────────────────────────────────────────────────
+   Main Register component
+───────────────────────────────────────────────────────────── */
 export default function Register() {
   const { register } = useAuth();
   const navigate     = useNavigate();
   const [params]     = useSearchParams();
 
-  // step 1=basic, 2=social, 3=analyzing, 4=success
-  const [step,    setStep]    = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [stepIdx, setStepIdx] = useState(0);
-  const [result,  setResult]  = useState(null); // { user, socialResult }
+  const [step,          setStep]          = useState(1);
+  const [loading,       setLoading]       = useState(false);
+  const [stepIdx,       setStepIdx]       = useState(0);
+  const [result,        setResult]        = useState(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);  // ← NEW
+  const [showTerms,     setShowTerms]     = useState(false);  // ← NEW
 
   const [form, setForm] = useState({
     displayName:'', email:'', password:'', role: params.get('role')||'creator',
@@ -80,11 +284,12 @@ export default function Register() {
     e.preventDefault();
     if (!form.displayName||!form.email||!form.password) return toast.error('Fill all required fields');
     if (form.password.length<6) return toast.error('Password min 6 characters');
-    if (form.role==='brand') { await doRegister({}); } // brands skip social step
+    if (!termsAccepted) return toast.error('Please accept the Terms & Conditions to continue'); // ← NEW
+    if (form.role==='brand') { await doRegister({}); }
     else setStep(2);
   };
 
-  /* ── Step 2 submit (with social URLs) ── */
+  /* ── Step 2 submit ── */
   const handleStep2 = async e => {
     e.preventDefault();
     if (!form.instagramUrl && !form.youtubeUrl) {
@@ -98,7 +303,7 @@ export default function Register() {
   async function doRegister(extras={}) {
     setLoading(true);
     try {
-      const { user } = await register({ ...form, ...extras });
+      const { user } = await register({ ...form, termsAccepted: true, ...extras }); // ← sends termsAccepted
       toast.success(`Welcome to Creatokite, ${user.displayName}! 🚀`);
       navigate(`/${user.role}/dashboard`, { replace:true });
     } catch(err) {
@@ -113,9 +318,8 @@ export default function Register() {
     const interval = setInterval(() => {
       setStepIdx(p => p < STEPS.length-1 ? p+1 : p);
     }, 950);
-
     try {
-      const data = await register(form); // { user, socialResult }
+      const data = await register({ ...form, termsAccepted: true }); // ← sends termsAccepted
       clearInterval(interval);
       await new Promise(r => setTimeout(r, 500));
       setResult(data);
@@ -132,6 +336,10 @@ export default function Register() {
   /* ── STEP 1: Basic Info ─────────────────────────────────────── */
   if (step===1) return (
     <div style={{ minHeight:'100vh', background:'var(--bg)', display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
+
+      {/* Terms modal — renders on top when showTerms is true */}
+      {showTerms && <TermsModal role={form.role} onClose={()=>setShowTerms(false)} />}
+
       <div style={{ width:'100%', maxWidth:440 }}>
         <div style={{ textAlign:'center', marginBottom:28 }}>
           <div style={{ width:44,height:44,borderRadius:12,background:'linear-gradient(135deg,var(--p),var(--acc))',
@@ -144,7 +352,7 @@ export default function Register() {
           {/* Role pills */}
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom:20 }}>
             {[['creator','✨ Creator','Earn from brand campaigns'],['brand','🏢 Brand','Run AI-powered campaigns']].map(([r,label,sub])=>(
-              <div key={r} onClick={()=>setForm(p=>({...p,role:r}))}
+              <div key={r} onClick={()=>{ setForm(p=>({...p,role:r})); setTermsAccepted(false); }}
                 style={{ padding:'12px', borderRadius:'var(--r)', cursor:'pointer', transition:'all 0.15s',
                   background:form.role===r?'rgba(108,99,255,0.12)':'rgba(255,255,255,0.03)',
                   border:form.role===r?'1px solid rgba(108,99,255,0.4)':'1px solid var(--border)' }}>
@@ -175,8 +383,39 @@ export default function Register() {
               <Input label="Company Name" value={form.companyName} onChange={upd('companyName')} placeholder="Your Company Pvt Ltd" />
             )}
 
-            <Btn variant="primary" className="w-full btn-lg" type="submit" disabled={loading}
-              style={{ marginTop:4, display:'flex', alignItems:'center', justifyContent:'center', gap:7 }}>
+            {/* ── Terms & Conditions checkbox ── */}
+            <div style={{
+              display:'flex', alignItems:'flex-start', gap:10,
+              padding:'12px 14px',
+              background: termsAccepted ? 'rgba(52,211,153,0.05)' : 'rgba(108,99,255,0.05)',
+              border:`1px solid ${termsAccepted ? 'rgba(52,211,153,0.3)' : 'rgba(108,99,255,0.2)'}`,
+              borderRadius:10, marginTop:2, transition:'all 0.2s',
+            }}>
+              <input
+                type="checkbox"
+                id="termsCheck"
+                checked={termsAccepted}
+                onChange={e => setTermsAccepted(e.target.checked)}
+                style={{ marginTop:2, width:15, height:15, cursor:'pointer', accentColor:'var(--p)', flexShrink:0 }}
+              />
+              <label htmlFor="termsCheck" style={{ fontSize:12, color:'var(--t2)', lineHeight:1.65, cursor:'pointer' }}>
+                I have read and agree to the{' '}
+                <span
+                  onClick={e => { e.preventDefault(); setShowTerms(true); }}
+                  style={{ color:'var(--p2)', fontWeight:700, textDecoration:'underline', cursor:'pointer' }}>
+                  Terms & Conditions
+                </span>
+                {' '}for {form.role === 'brand' ? 'Brands' : 'Creators'} on CreatoKite.
+              </label>
+            </div>
+
+            <Btn variant="primary" className="w-full btn-lg" type="submit" disabled={loading || !termsAccepted}
+              style={{
+                marginTop:4, display:'flex', alignItems:'center', justifyContent:'center', gap:7,
+                opacity: !termsAccepted ? 0.45 : 1,
+                cursor: !termsAccepted ? 'not-allowed' : 'pointer',
+                transition:'opacity 0.2s',
+              }}>
               {loading ? 'Creating…' :
                 form.role==='creator'
                   ? <><span>Next: Connect Social Profile</span><ArrowRight size={14}/></>
@@ -206,7 +445,6 @@ export default function Register() {
           </p>
         </div>
 
-        {/* Benefits row */}
         <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10, marginBottom:16 }}>
           {[['📊','Auto CAS Score','AI scores your performance'],
             ['🛡️','Brand Verified','Get trust badge instantly'],
@@ -319,7 +557,6 @@ export default function Register() {
               </p>
               <ScoreMini score={sr.cas} badge={sr.badge}/>
 
-              {/* Quick platform stats */}
               {(sr.igData||sr.ytData) && (
                 <div style={{ marginTop:14, display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:8 }}>
                   {[sr.igData,sr.ytData].filter(Boolean).flatMap(d=>[
