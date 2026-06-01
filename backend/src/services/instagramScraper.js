@@ -393,13 +393,15 @@ async function method3_instaloader(username) {
 
 // ══════════════════════════════════════════════════════════════════
 // METHOD 3.2 — ScrapeCreators API (100 free credits, no card needed)
+// Uses SCRAPECREATORS_KEY_PROFILE (separate from reel credits)
 // Sign up: https://app.scrapecreators.com
 // Docs:    https://scrapecreators.com/instagram-api
 // ══════════════════════════════════════════════════════════════════
 async function method32_scrapeCreators(username) {
-  const key = process.env.SCRAPECREATORS_KEY;
-  if (!key || key === 'your_scrapecreators_key') {
-    console.log('[IG Method 3.2] ScrapeCreators key not set, skipping');
+  // Profile fetching uses its own key — separate from reel scraping credits
+  const key = process.env.SCRAPECREATORS_KEY_PROFILE || process.env.SCRAPECREATORS_KEY;
+  if (!key || key.startsWith('your_')) {
+    console.log('[IG Method 3.2] ScrapeCreators profile key not set, skipping');
     return null;
   }
 
@@ -633,12 +635,14 @@ async function scrapeInstagram(input) {
   if (!username) throw new Error('Invalid Instagram URL or username');
 
   // Try methods in order. First success wins.
+  // ScrapeCreators (method32) is now tried BEFORE Instaloader —
+  // faster, more reliable, and uses a separate key (SCRAPECREATORS_KEY_PROFILE).
   const rawProfile =
-    await method1_directAPI(username)    ||
-    await method2_playwright(username)   ||
-    await method3_instaloader(username)  ||
+    await method1_directAPI(username)       ||
+    await method2_playwright(username)      ||
     await method32_scrapeCreators(username) ||
-    await method35_rapidapi(username)    ||
+    await method3_instaloader(username)     ||
+    await method35_rapidapi(username)       ||
     method4_estimate(username);
 
   const { postsData, ...profile } = rawProfile;
