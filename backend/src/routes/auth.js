@@ -1,13 +1,13 @@
 
 const express = require('express');
 const jwt     = require('jsonwebtoken');
+const passport = require('passport');
 const { body, validationResult } = require('express-validator');
 const { User, Notification }     = require('../models');
 const { auth, setAuthCookies, clearAuthCookies } = require('../middleware/auth');
 const { computeScore, getRank, computeCAS }       = require('../services/scoring');
 const { fetchSocialData }                          = require('../services/socialFetcher');
-/*const sendLoginMail = require("../utils/sendEmail");*/
-const { sendLoginMail, sendVerificationMail } = require("../utils/sendEmail");
+const { sendLoginMail, sendWelcomeMail, sendVerificationMail } = require("../utils/sendEmail");
 
 
 const router    = express.Router();
@@ -61,14 +61,10 @@ router.post('/register', [
       user.creatorScore=total; user.dna=dna; user.rank=getRank(total);
     }
 
+    user.emailVerified = true;
     const token=mkToken(user._id), refresh=mkRefresh(user._id);
-    user.refreshToken=refresh;
     await user.save();
-    const crypto = require('crypto');
-    const verifyToken = crypto.randomBytes(32).toString('hex');
-    user.emailVerifyToken = verifyToken;
-    await user.save({ validateBeforeSave: false });
-    await sendVerificationMail(email, verifyToken);
+    sendWelcomeMail(user.email, user.displayName).catch(e => console.error("Welcome email failed:", e));
 
     let socialResult = null;
     if (role==='creator' && (instagramUrl || youtubeUrl)) {
@@ -125,8 +121,6 @@ router.post('/login', [
     const user = await User.findOne({ email });
     if (!user || !(await user.comparePassword(password)))
       return res.status(401).json({ success:false, message:'Invalid email or password.' });
-    if (!user.emailVerified)
-    return res.status(403).json({ success: false, message: 'Please verify your email first.' });
     if (user.isBanned)
       return res.status(403).json({ success:false, message:`Account suspended: ${user.banReason}` });
 
@@ -140,7 +134,7 @@ router.post('/login', [
     const token=mkToken(user._id), refresh=mkRefresh(user._id);
     user.refreshToken=refresh;
     await user.save({ validateBeforeSave:false });
-    await sendLoginMail(user.email);
+    sendLoginMail(user.email).catch(e => console.error("Login email failed:", e));
 
     return sendAuth(res, 200, user, token, refresh);
   } catch(e) { res.status(500).json({ success:false, message:e.message }); }
@@ -193,4 +187,56 @@ router.get('/verify-email', async (req, res) => {
         res.json({ success: true, message: 'Email verified! You can now login.' });
     } catch(e) { res.status(500).json({ success: false, message: e.message }); }
 });
+
+/* ── GET /api/auth/google ────────────────────────────────── */
+router.get('/google', passport.authenticate('google', {
+  scope: ['profile', 'email'],
+  session: false
+}));
+
+router.get('/google/callback', (req, res, next) => {
+  if (req.query.code && typeof req.query.code === 'string') {
+    req.query.code = req.query.code.replace(/&#x2F;/g, '/').replace(/&#x2f;/g, '/');
+  }
+  if (req.query.scope && typeof req.query.scope === 'string') {
+    req.query.scope = req.query.scope.replace(/&#x2F;/g, '/').replace(/&#x2f;/g, '/');
+  }
+
+  console.log(`\n[Google Callback] Incoming request to /api/auth/google/callback`);
+  console.log(`   Query params:`, req.query);
+  console.log(`   Headers:`, {
+    host: req.headers.host,
+    'x-forwarded-host': req.headers['x-forwarded-host'],
+    'x-forwarded-proto': req.headers['x-forwarded-proto'],
+  });
+
+  passport.authenticate('google', { session: false }, async (err, user, info) => {
+    if (err) {
+      console.error("[Google Callback] Passport authentication error:", err);
+      const errorMsg = err.message || 'google_auth_failed';
+      return res.redirect(`${process.env.CLIENT_URL || 'http://localhost:5173'}/login?error=google_auth_failed&message=${encodeURIComponent(errorMsg)}`);
+    }
+    if (!user) {
+      console.warn("[Google Callback] No user object returned by Passport");
+      return res.redirect(`${process.env.CLIENT_URL || 'http://localhost:5173'}/login?error=user_not_found`);
+    }
+    try {
+      console.log(`[Google Callback] Authenticated successfully. User:`, user.email);
+      const token = mkToken(user._id);
+      const refresh = mkRefresh(user._id);
+      
+      user.refreshToken = refresh;
+      await user.save({ validateBeforeSave: false });
+
+      setAuthCookies(res, token, refresh);
+      console.log(`[Google Callback] Session tokens saved. Redirecting to frontend /login-success`);
+      
+      return res.redirect(`${process.env.CLIENT_URL || 'http://localhost:5173'}/login-success?token=${token}&refreshToken=${refresh}`);
+    } catch (error) {
+      console.error("[Google Callback] Error after successful passport login:", error);
+      return res.redirect(`${process.env.CLIENT_URL || 'http://localhost:5173'}/login?error=server_error`);
+    }
+  })(req, res, next);
+});
+
 module.exports = router;

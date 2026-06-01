@@ -62,8 +62,7 @@ const xssClean = (req, _res, next) => {
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#x27;')
-      .replace(/\//g, '&#x2F;');
+      .replace(/'/g, '&#x27;');
   };
   const deepClean = (obj) => {
     if (!obj || typeof obj !== 'object') return;

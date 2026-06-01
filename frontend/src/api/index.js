@@ -14,7 +14,7 @@ const api = axios.create({
 /* ── Token injection (fallback for non-cookie envs) ──────── */
 api.interceptors.request.use(cfg => {
   const token = localStorage.getItem('ck_token');
-  if (token && !cfg.headers.Authorization) {
+  if (token) {
     cfg.headers.Authorization = `Bearer ${token}`;
   }
   return cfg;
@@ -46,7 +46,6 @@ api.interceptors.response.use(r => r, async err => {
       const { token, refreshToken } = data;
       if (token) localStorage.setItem('ck_token', token);
       if (refreshToken) localStorage.setItem('ck_refresh', refreshToken);
-      api.defaults.headers.common.Authorization = `Bearer ${token}`;
       flush(null, token);
       orig.headers.Authorization = `Bearer ${token}`;
       return api(orig);
