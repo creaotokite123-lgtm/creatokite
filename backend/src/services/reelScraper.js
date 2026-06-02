@@ -197,13 +197,8 @@ async function scrapeReel(urlOrShortcode) {
 
   const data =
   await method1_scrapeCreators(shortcode) ||
-  await method2_rapidapi(shortcode);
-
-if (!data) {
-  throw new Error(
-    'Unable to fetch reel metrics. Instagram source failed.'
-  );
-}
+  await method2_rapidapi(shortcode) ||
+  method3_estimate(shortcode);
 
   // Compute engagement %
   const engagement = data.views > 0
