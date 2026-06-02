@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { Btn, Input } from '../../components/ui';
@@ -13,6 +13,22 @@ export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
   const upd = k => e => setForm(p => ({ ...p, [k]: e.target.value }));
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get('error');
+    const message = params.get('message');
+    if (error) {
+      if (error === 'google_auth_failed') {
+        toast.error(`Google Login Failed: ${message || 'Authentication error'}`);
+      } else if (error === 'user_not_found') {
+        toast.error('Google account could not be mapped to a user.');
+      } else {
+        toast.error('An error occurred during Google Login.');
+      }
+      navigate('/login', { replace: true });
+    }
+  }, [navigate]);
+
   const handleSubmit = async e => {
     e.preventDefault();
     if (!form.email || !form.password) return toast.error('Fill in all fields');
@@ -24,19 +40,6 @@ export default function Login() {
     } catch (err) {
       const msg = err.response?.data?.message || err.message || 'Login failed';
       toast.error(msg);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loginDemo = async (email) => {
-    setLoading(true);
-    try {
-      const user = await login(email, 'Demo@12345');
-      toast.success(`Demo login: ${user.displayName}`);
-      navigate(`/${user.role}/dashboard`, { replace: true });
-    } catch (e) {
-      toast.error('Demo login failed — run: cd backend && npm run seed');
     } finally {
       setLoading(false);
     }
@@ -101,60 +104,51 @@ export default function Login() {
             </Btn>
             </form>
           
-          <button
-  onClick={() => {
-  const API = import.meta.env.VITE_API_URL;
-
-  window.location.href =
-    `${API}/auth/google`;
-}}
-  style={{
-    width: '100%',
-    marginTop: 14,
-    padding: '12px',
-    borderRadius: 'var(--r)',
-    border: '1px solid var(--border)',
-    background: 'white',
-    color: '#111',
-    fontWeight: 600,
-    cursor: 'pointer',
-  }}
->
-
-  Continue with Google
-
-</button>
-
-          <div style={{ margin: '20px 0', borderTop: '1px solid var(--border)', paddingTop: 16 }}>
-            <p style={{ fontSize: 12, color: 'var(--t2)', textAlign: 'center', marginBottom: 10 }}>
-              Quick demo access
-            </p>
-            <div style={{ display: 'flex', gap: 8 }}>
-              {[
-                ['👑 Admin',   'admin@creatokite.com'],
-                ['🏢 Brand',   'brand@demo.com'],
-                ['✨ Creator', 'creator1@demo.com'],
-              ].map(([l, e]) => (
-                <button
-                  key={e}
-                  onClick={() => loginDemo(e)}
-                  disabled={loading}
-                  style={{
-                    flex: 1, padding: '8px 4px', fontSize: 11, borderRadius: 'var(--r)',
-                    cursor: 'pointer', background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid var(--border)', color: 'var(--t2)',
-                    transition: 'all 0.15s', fontFamily: 'var(--fb)',
-                    minHeight: 36,
-                  }}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
-            <p style={{ fontSize: 10, color: 'var(--t3)', textAlign: 'center', marginTop: 8 }}>
-              Run <code style={{ background: 'rgba(255,255,255,0.06)', padding: '1px 4px', borderRadius: 4 }}>npm run seed</code> in backend first
-            </p>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            margin: '18px 0',
+            color: 'var(--t3)',
+            fontSize: '11px',
+          }}>
+            <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
+            <span style={{ padding: '0 12px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>OR</span>
+            <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
           </div>
+
+          <button
+            onClick={() => {
+              const API = import.meta.env.VITE_API_URL || '/api';
+              window.location.href = `${API}/auth/google`;
+            }}
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '11px',
+              borderRadius: 'var(--r)',
+              border: '1px solid var(--border)',
+              background: 'white',
+              color: '#111',
+              fontWeight: 600,
+              cursor: 'pointer',
+              fontSize: '13.5px',
+              fontFamily: 'var(--fb)',
+              transition: 'background 0.2s',
+              marginBottom: 18,
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = '#f5f5f7'}
+            onMouseLeave={e => e.currentTarget.style.background = 'white'}
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" style={{ marginRight: 8 }}>
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+            </svg>
+            Continue with Google
+          </button>
 
           <p style={{ textAlign: 'center', fontSize: 13, color: 'var(--t2)' }}>
             No account?{' '}

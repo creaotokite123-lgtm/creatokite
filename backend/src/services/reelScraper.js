@@ -16,8 +16,9 @@ function extractShortcode(input) {
 
 // ── Method 1: ScrapeCreators API ─────────────────────────────
 async function method1_scrapeCreators(shortcode) {
-  const key = process.env.SCRAPECREATORS_KEY;
-  if (!key || key === 'your_scrapecreators_key') return null;
+  // Reel analytics uses its own key — separate from profile scraping credits
+  const key = process.env.SCRAPECREATORS_KEY_REELS || process.env.SCRAPECREATORS_KEY;
+  if (!key || key.startsWith('your_')) return null;
 
   try {
     const res = await axios.get('https://api.scrapecreators.com/v1/instagram/post', {

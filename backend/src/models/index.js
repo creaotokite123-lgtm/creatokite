@@ -18,6 +18,9 @@ const userSchema = new mongoose.Schema({
   refreshToken: { type: String, default: '' },
   niche:        { type: String, default: '' },
   subNiches:    [String],
+  emailVerified:    { type: Boolean, default: true },
+  emailVerifyToken: { type: String, default: '' },
+  provider:         { type: String, default: 'local' },
   platforms: {
     instagram: { followers:{type:Number,default:0}, engagement:{type:Number,default:0} },
     youtube:   { followers:{type:Number,default:0}, engagement:{type:Number,default:0} },

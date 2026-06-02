@@ -135,7 +135,13 @@ export default function Profile() {
       toast.success(data.autoApprove ? '🎉 Auto-approved! Excellent score.' : '✅ Analysis done. Pending admin review.');
     } catch(e) {
       clearInterval(interval);
-      toast.error(e.response?.data?.message || 'Analysis failed. Check your URLs and try again.');
+      // Hide low-level scraper failure messages (instaloader etc.) — show a clean user-facing msg
+      const rawMsg = e.response?.data?.message || e.message || '';
+      const isScraperNoise = /instaloader|subprocess|python|method\s*[0-9]/i.test(rawMsg);
+      const displayMsg = isScraperNoise
+        ? 'Could not fetch profile data. Check your Instagram URL and try again.'
+        : rawMsg || 'Analysis failed. Check your URLs and try again.';
+      toast.error(displayMsg);
     } finally { setAnalyzing(false); }
   };
 
