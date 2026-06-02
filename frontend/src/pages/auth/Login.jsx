@@ -52,13 +52,16 @@ export default function Login() {
       <div style={{ width: '100%', maxWidth: 420 }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <div style={{
-            width: 48, height: 48, borderRadius: 14,
-            background: 'linear-gradient(135deg,var(--p),var(--acc))',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 22, margin: '0 auto 14px',
-            boxShadow: 'var(--shadow-p)',
-          }}>⚡</div>
+          
+          <img 
+           src="/src/assets/logo.jpeg" 
+           alt="CreatoKite"
+           style={{
+             width: 48, height: 48, borderRadius: 14,
+             margin: '0 auto 14px', display: 'block',
+             objectFit: 'contain',
+           }} 
+            />
           <h1 style={{ fontFamily: 'var(--fd)', fontSize: 'clamp(20px,5vw,26px)', fontWeight: 800 }}>
             Welcome back
           </h1>

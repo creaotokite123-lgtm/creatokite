@@ -342,8 +342,8 @@ export default function Register() {
 
       <div style={{ width:'100%', maxWidth:440 }}>
         <div style={{ textAlign:'center', marginBottom:28 }}>
-          <div style={{ width:44,height:44,borderRadius:12,background:'linear-gradient(135deg,var(--p),var(--acc))',
-            display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,margin:'0 auto 14px' }}>⚡</div>
+         <img src="/src/assets/logo.jpeg" alt="CreatoKite"
+         style={{ width:44,height:44,borderRadius:12,objectFit:'contain',margin:'0 auto 14px',display:'block' }}/>
           <h1 style={{ fontFamily:'var(--fd)', fontSize:22, fontWeight:800 }}>Create your account</h1>
           <p style={{ color:'var(--t2)', fontSize:13, marginTop:4 }}>Join India's AI-Powered Creator Campaign OS</p>
         </div>
@@ -437,8 +437,9 @@ export default function Register() {
     <div style={{ minHeight:'100vh', background:'var(--bg)', display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
       <div style={{ width:'100%', maxWidth:480 }}>
         <div style={{ textAlign:'center', marginBottom:24 }}>
-          <div style={{ width:44,height:44,borderRadius:12,background:'linear-gradient(135deg,var(--p),var(--acc))',
-            display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,margin:'0 auto 14px' }}>⚡</div>
+          <img src="/src/assets/logo.jpeg" alt="CreatoKite"
+            style={{ width:44,height:44,borderRadius:12,objectFit:'contain',margin:'0 auto 14px',display:'block' }}/>
+
           <h1 style={{ fontFamily:'var(--fd)', fontSize:20, fontWeight:800 }}>Connect Your Social Profiles</h1>
           <p style={{ color:'var(--t2)', fontSize:13, marginTop:4 }}>
             AI auto-fetches your real followers, likes & engagement — no manual entry
@@ -511,8 +512,10 @@ export default function Register() {
   if (step===3) return (
     <div style={{ minHeight:'100vh', background:'var(--bg)', display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
       <div style={{ width:'100%', maxWidth:380, textAlign:'center' }}>
-        <div style={{ width:44,height:44,borderRadius:12,background:'linear-gradient(135deg,var(--p),var(--acc))',
-          display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,margin:'0 auto 20px' }}>⚡</div>
+           
+           <img src="/src/assets/logo.jpeg" alt="CreatoKite"
+            style={{ width:44,height:44,borderRadius:12,objectFit:'contain',margin:'0 auto 20px',display:'block' }}/>
+
         <h2 style={{ fontFamily:'var(--fd)', fontWeight:800, fontSize:19, marginBottom:6 }}>Analyzing your profile…</h2>
         <p style={{ color:'var(--t2)', fontSize:13, marginBottom:28 }}>Creating account and computing your AI score</p>
 

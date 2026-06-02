@@ -92,9 +92,10 @@ export default function Landing() {
         backdropFilter:scrolled?'blur(20px)':'none',
         borderBottom:scrolled?'1px solid var(--border)':'none',transition:'all .3s'}}>
         <div style={{display:'flex',alignItems:'center',gap:8}}>
-          <div style={{width:28,height:28,borderRadius:7,background:'linear-gradient(135deg,var(--p),var(--acc))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13}}>⚡</div>
+          <img src="/src/assets/logo.jpeg" alt="CreatoKite"
+            style={{width:28,height:28,borderRadius:7,objectFit:'contain',display:'block'}}/>
           <span style={{fontFamily:'var(--fd)',fontWeight:800,fontSize:16}}>Creatokite</span>
-          <span style={{fontSize:9,color:'var(--acc)',border:'1px solid rgba(0,217,255,0.3)',borderRadius:4,padding:'1px 5px'}}>AI OS</span>
+         
         </div>
         <div style={{display:'flex',gap:8,alignItems:'center'}}>
           <button onClick={()=>nav('/login')} style={{background:'none',border:'none',color:'var(--t2)',cursor:'pointer',padding:'7px 14px',borderRadius:7,fontSize:13}} onMouseEnter={e=>e.target.style.color='var(--t1)'} onMouseLeave={e=>e.target.style.color='var(--t2)'}>Sign In</button>
@@ -223,7 +224,8 @@ export default function Landing() {
       {/* FOOTER */}
       <footer style={{borderTop:'1px solid var(--border)',padding:'22px 40px',display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:12}}>
         <div style={{display:'flex',alignItems:'center',gap:7}}>
-          <div style={{width:22,height:22,borderRadius:6,background:'linear-gradient(135deg,var(--p),var(--acc))',display:'flex',alignItems:'center',justifyContent:'center',fontSize:10}}>⚡</div>
+          <img src="/src/assets/logo.jpeg" alt="CreatoKite"
+           style={{width:22,height:22,borderRadius:6,objectFit:'contain',display:'block'}}/>
           <span style={{fontFamily:'var(--fd)',fontWeight:800,fontSize:14}}>Creatokite</span>
         </div>
         <div style={{fontSize:11,color:'var(--t3)'}}>© 2025 Creatokite — AI-Powered Creator Campaign OS · India</div>

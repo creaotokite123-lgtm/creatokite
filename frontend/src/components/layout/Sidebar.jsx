@@ -1,3 +1,4 @@
+/*sidebar*/
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { Avatar } from '../ui';
@@ -80,12 +81,11 @@ export default function Sidebar({ isOpen, onClose }) {
           justifyContent: 'space-between',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-            <div style={{
-              width: 30, height: 30, borderRadius: 8,
-              background: 'linear-gradient(135deg,var(--p),var(--acc))',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 14, flexShrink: 0,
-            }}>⚡</div>
+            <img 
+  src="/src/assets/logo.jpeg" 
+  alt="CreatoKite" 
+  style={{ width:30, height:30, borderRadius:8, objectFit:'contain', flexShrink:0 }} 
+                   />
             <div className="sidebar-logo-text">
               <div style={{ fontFamily: 'var(--fd)', fontWeight: 800, fontSize: 15, color: 'var(--t1)', lineHeight: 1 }}>
                 Creatokite
