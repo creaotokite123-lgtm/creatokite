@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Btn, Input } from '../../components/ui';
 import toast from 'react-hot-toast';
@@ -53,9 +54,36 @@ export default function Login() {
       padding: 'clamp(12px,4vw,24px)',
     }}>
       <div style={{ width: '100%', maxWidth: 420 }}>
+        {/* Back to Home */}
+        <button onClick={() => navigate('/')}
+          style={{
+            display:'flex', alignItems:'center', gap:6,
+            background:'rgba(255,255,255,0.05)',
+            border:'1px solid var(--border)',
+            borderRadius:99,
+            color:'var(--t2)', cursor:'pointer',
+            fontSize:12, fontWeight:600,
+            padding:'7px 14px',
+            marginBottom:20,
+            transition:'all 0.2s',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = 'rgba(108,99,255,0.1)';
+            e.currentTarget.style.borderColor = 'rgba(108,99,255,0.3)';
+            e.currentTarget.style.color = 'var(--p2)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+            e.currentTarget.style.borderColor = 'var(--border)';
+            e.currentTarget.style.color = 'var(--t2)';
+          }}
+        >
+          <ArrowLeft size={13}/> Back to Home
+        </button>
+
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          
+
           <img 
            src="/src/assets/logo.jpeg" 
            alt="CreatoKite"

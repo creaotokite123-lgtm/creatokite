@@ -339,14 +339,42 @@ export default function Register() {
 
       {/* Terms modal — renders on top when showTerms is true */}
       {showTerms && <TermsModal role={form.role} onClose={()=>setShowTerms(false)} />}
+             <div style={{ width:'100%', maxWidth:440 }}>
+                <button onClick={() => navigate('/')}
+                  style={{
+                    display:'flex', alignItems:'center', gap:6,
+                    background:'rgba(255,255,255,0.05)',
+                    border:'1px solid var(--border)',
+                    borderRadius:99,
+                    color:'var(--t2)', cursor:'pointer',
+                    fontSize:12, fontWeight:600,
+                    padding:'7px 14px',
+                    marginBottom:20,
+                    transition:'all 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'rgba(108,99,255,0.1)';
+                    e.currentTarget.style.borderColor = 'rgba(108,99,255,0.3)';
+                    e.currentTarget.style.color = 'var(--p2)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                    e.currentTarget.style.borderColor = 'var(--border)';
+                    e.currentTarget.style.color = 'var(--t2)';
+                  }}
+                >
+                  <ArrowLeft size={13}/> Back to Home
+                </button>
+             
+                <div style={{ textAlign:'center', marginBottom:28 }}>
+                  <img src="/src/assets/logo.jpeg" alt="CreatoKite"
+                    style={{ width:44,height:44,borderRadius:12,objectFit:'contain',margin:'0 auto 14px',display:'block' }}/>
+                  <h1 style={{ fontFamily:'var(--fd)', fontSize:22, fontWeight:800 }}>Create your account</h1>
+                  <p style={{ color:'var(--t2)', fontSize:13, marginTop:4 }}>Join India's AI-Powered Creator Campaign OS</p>
+                </div>
+     
 
-      <div style={{ width:'100%', maxWidth:440 }}>
-        <div style={{ textAlign:'center', marginBottom:28 }}>
-         <img src="/src/assets/logo.jpeg" alt="CreatoKite"
-         style={{ width:44,height:44,borderRadius:12,objectFit:'contain',margin:'0 auto 14px',display:'block' }}/>
-          <h1 style={{ fontFamily:'var(--fd)', fontSize:22, fontWeight:800 }}>Create your account</h1>
-          <p style={{ color:'var(--t2)', fontSize:13, marginTop:4 }}>Join India's AI-Powered Creator Campaign OS</p>
-        </div>
+         
 
         <div style={card}>
           {/* Role pills */}
@@ -432,6 +460,7 @@ export default function Register() {
     </div>
   );
 
+
   /* ── STEP 2: Social Profiles ────────────────────────────────── */
   if (step===2) return (
     <div style={{ minHeight:'100vh', background:'var(--bg)', display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
@@ -484,13 +513,13 @@ export default function Register() {
               <span className="form-hint">e.g. youtube.com/@priyatech</span>
             </div>
 
-            <div style={{ display:'flex', gap:10, marginTop:4 }}>
+              <div style={{ display:'flex', gap:10, marginTop:4 }}>
               <button type="button" onClick={()=>setStep(1)}
                 style={{ display:'flex', alignItems:'center', gap:5, padding:'10px 14px',
                   background:'transparent', border:'1px solid var(--border)', borderRadius:'var(--r)',
                   color:'var(--t2)', cursor:'pointer', fontSize:13 }}>
                 <ArrowLeft size={13}/> Back
-              </button>
+                </button>
               <Btn variant="primary" type="submit"
                 style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:7 }}>
                 <Zap size={14}/> Analyze & Create Account
