@@ -259,6 +259,16 @@ router.get('/campaign/:campaignId', async (req, res) => {
           console.log(`[CampaignReels] Auto-tracked ${shortcode} for campaign ${req.params.campaignId}`);
         } catch(e) {
           console.error('[CampaignReels] Auto-track failed:', e.message);
+          // Still create reel with 0s so it shows up in UI
+          await Reel.create({
+            url:        `https://www.instagram.com/reel/${shortcode}/`,
+            shortcode,
+            addedBy:    a.creator,
+            campaignId: req.params.campaignId,
+            status:     'failed',
+            failReason: e.message,
+            dataSource: 'unknown',
+          }).catch(() => {});
         }
       } else if (!exists.campaignId) {
         exists.campaignId = req.params.campaignId;
