@@ -49,6 +49,18 @@ router.put('/profile', auth, async (req, res) => {
     allowed.forEach(k => { if (req.body[k]!==undefined) update[k]=req.body[k]; });
 
     const user = await User.findById(req.user._id);
+    
+    if (req.body.email) {
+      const emailLower = req.body.email.toLowerCase().trim();
+      if (emailLower !== user.email) {
+        const emailExists = await User.findOne({ email: emailLower });
+        if (emailExists) {
+          return res.status(409).json({ success: false, message: 'Email is already in use by another account.' });
+        }
+        user.email = emailLower;
+      }
+    }
+
     Object.assign(user, update);
 
     // Profile completeness
@@ -64,6 +76,16 @@ router.put('/profile', auth, async (req, res) => {
 
     await user.save({ validateBeforeSave:false });
     res.json({ success:true, user:user.toPublicJSON() });
+  } catch(e) { res.status(500).json({ success:false, message:e.message }); }
+});
+
+/* DELETE /api/users/profile — delete own account */
+router.delete('/profile', auth, async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.user._id);
+    const { clearAuthCookies } = require('../middleware/auth');
+    clearAuthCookies(res);
+    res.json({ success: true, message: 'Account successfully deleted.' });
   } catch(e) { res.status(500).json({ success:false, message:e.message }); }
 });
 

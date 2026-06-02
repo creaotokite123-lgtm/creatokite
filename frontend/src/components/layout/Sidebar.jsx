@@ -24,6 +24,7 @@ const BRAND_NAV = [
   { to: '/brand/campaigns/create', icon: PlusCircle,      label: 'New Campaign' },
   { to: '/brand/campaigns',        icon: Megaphone,       label: 'My Campaigns' },
   { to: '/brand/analytics',        icon: BarChart2,       label: 'Analytics'    },
+  { to: '/brand/profile',          icon: Settings,        label: 'Profile'      },
 ];
 
 /* Admin — no Creator Analysis; Reel Analytics stays */

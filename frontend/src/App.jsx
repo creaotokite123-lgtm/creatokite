@@ -22,6 +22,7 @@ import CreateCampaign from './pages/brand/CreateCampaign';
 import BrandCampaigns from './pages/brand/BrandCampaigns';
 import BrandAnalytics from './pages/brand/BrandAnalytics';
 import CampaignDetail from './pages/brand/CampaignDetail';
+import BrandProfile    from './pages/brand/Profile';
 
 import AdminDashboard       from './pages/admin/AdminDashboard';
 import AdminCampaigns       from './pages/admin/AdminCampaigns';
@@ -63,6 +64,7 @@ export default function App() {
         <Route path="/brand/campaigns"        element={<BrandCampaigns />} />
         <Route path="/brand/campaigns/:id"    element={<CampaignDetail />} />
         <Route path="/brand/analytics"        element={<BrandAnalytics />} />
+        <Route path="/brand/profile"          element={<BrandProfile />} />
       </Route>
 
       {/* Admin — no CreatorAnalysis; Reel Analytics stays */}

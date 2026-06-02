@@ -106,6 +106,7 @@ export const adminAPI = {
 export const usersAPI = {
   profile:       ()     => api.get('/users/profile').then(unwrap),
   updateProfile: d      => api.put('/users/profile', d).then(unwrap),
+  deleteAccount: ()     => api.delete('/users/profile').then(unwrap),
   publicProfile: handle => api.get(`/users/${handle}`).then(unwrap),
   leaderboard:   p      => api.get('/users/leaderboard', { params: p }).then(unwrap),
   creators:      p      => api.get('/users/creators', { params: p }).then(unwrap),

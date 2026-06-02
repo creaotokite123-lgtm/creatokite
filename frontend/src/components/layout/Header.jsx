@@ -17,6 +17,7 @@ const PAGE_TITLE = {
   '/brand/campaigns/create': 'New Campaign',
   '/brand/campaigns':    'My Campaigns',
   '/brand/analytics':    'Analytics',
+  '/brand/profile':      'Profile',
   '/admin/dashboard':    'Dashboard',
   '/admin/campaigns':    'Campaigns',
   '/admin/users':        'Users',
@@ -71,6 +72,7 @@ export default function Header({ onMenuToggle, sidebarOpen }) {
   const goProfile = () => {
     setShowUser(false);
     if (user?.role === 'creator') navigate('/creator/profile');
+    if (user?.role === 'brand') navigate('/brand/profile');
   };
 
   return (
@@ -227,7 +229,7 @@ export default function Header({ onMenuToggle, sidebarOpen }) {
                 {user?.role}
               </span>
             </div>
-            {user?.role === 'creator' && (
+            {(user?.role === 'creator' || user?.role === 'brand') && (
               <button onClick={goProfile} className="btn btn-ghost btn-sm w-full"
                 style={{ justifyContent: 'flex-start', padding: '10px 14px', borderRadius: 0 }}>
                 <User size={13} /> Profile

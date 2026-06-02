@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { campaignsAPI } from '../../api';
 import { PageLoader, StatCard, WorkflowPipeline, StatusBadge, Btn, EmptyState } from '../../components/ui';
-import { Target, TrendingUp, IndianRupee, Users, Plus, BarChart2, Eye } from 'lucide-react';
+import { Target, TrendingUp, IndianRupee, Users, Plus, BarChart2, Eye, Settings } from 'lucide-react';
 
 const WF = {
   brand_submitted:  { label:'Under Review',    icon:'⏳', color:'var(--gold)',  desc:'Admin reviewing your brief' },
@@ -53,6 +53,7 @@ export default function BrandDashboard() {
         <div style={{ display:'flex', gap:8 }}>
           <Btn variant="primary"   onClick={()=>navigate('/brand/campaigns/create')}><Plus size={14}/> New Campaign</Btn>
           <Btn variant="secondary" onClick={()=>navigate('/brand/analytics')}><BarChart2 size={14}/> Analytics</Btn>
+          <Btn variant="secondary" style={{ background:'rgba(255,255,255,0.03)' }} onClick={()=>navigate('/brand/profile')}><Settings size={14}/> Settings</Btn>
         </div>
       </div>
 

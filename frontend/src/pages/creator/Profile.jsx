@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { usersAPI, analyticsAPI } from '../../api';
 import { Btn, Input, Textarea } from '../../components/ui';
@@ -75,10 +76,12 @@ function CASRing({ cas=0, badge='REVIEW' }) {
 }
 
 export default function Profile() {
-  const { user, refreshUser } = useAuth();
+  const { user, refreshUser, setUser } = useAuth();
+  const navigate = useNavigate();
   const [saving, setSaving]   = useState(false);
   const [form, setForm]       = useState({
     displayName: user?.displayName||'',
+    email:       user?.email||'',
     bio:         user?.bio||'',
     location:    user?.location||'',
     website:     user?.website||'',
@@ -88,6 +91,24 @@ export default function Profile() {
 
   const [igUrl, setIgUrl]     = useState(user?.socialUrls?.instagram||'');
   const [ytUrl, setYtUrl]     = useState(user?.socialUrls?.youtube||'');
+
+  // Sync user details on mount or change
+  useEffect(() => {
+    if (user) {
+      setForm({
+        displayName: user.displayName||'',
+        email:       user.email||'',
+        bio:         user.bio||'',
+        location:    user.location||'',
+        website:     user.website||'',
+        niche:       user.niche||'',
+        avatar:      user.avatar||'',
+      });
+      setIgUrl(user.socialUrls?.instagram||'');
+      setYtUrl(user.socialUrls?.youtube||'');
+    }
+  }, [user]);
+
   const [analyzing, setAnalyzing] = useState(false);
   const [stepIdx,   setStepIdx]   = useState(0);
   const [casData,   setCasData]   = useState(null);
@@ -111,6 +132,21 @@ export default function Profile() {
       toast.success('Profile saved!');
     } catch(e) { toast.error(e.response?.data?.message || 'Update failed'); }
     finally { setSaving(false); }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (window.confirm("⚠️ WARNING: Deleting your account will permanently remove all your settings, matches, and profile data from Creatokite. This action cannot be undone.\n\nAre you sure you want to delete your account?")) {
+      try {
+        await usersAPI.deleteAccount();
+        toast.success('Account successfully deleted.');
+        localStorage.removeItem('ck_token');
+        localStorage.removeItem('ck_refresh');
+        setUser(null);
+        navigate('/login');
+      } catch (e) {
+        toast.error(e.response?.data?.message || 'Failed to delete account');
+      }
+    }
   };
 
   const analyzeProfile = async () => {
@@ -358,19 +394,35 @@ export default function Profile() {
         <h3 style={{ fontSize:13, fontWeight:700 }}>Basic Info</h3>
         <div className="grid-2" style={{ gap:12 }}>
           <Input label="Display Name" value={form.displayName} onChange={upd('displayName')} />
+          <Input label="Email Address" value={form.email} onChange={upd('email')} type="email" />
+        </div>
+        <div className="grid-2" style={{ gap:12 }}>
           <Input label="Avatar URL" value={form.avatar} onChange={upd('avatar')} placeholder="https://example.com/photo.jpg" hint="Paste a direct image URL" />
+          <div className="form-group">
+            <label className="form-label">Primary Niche</label>
+            <select className="form-input" value={form.niche} onChange={upd('niche')}>
+              <option value="">Select niche…</option>
+              {NICHES.map(n=><option key={n} value={n}>{n}</option>)}
+            </select>
+          </div>
         </div>
         <Textarea label="Bio" value={form.bio} onChange={upd('bio')} placeholder="Tell brands about yourself, your audience and content style…" style={{ minHeight:80 }} />
         <div className="grid-2" style={{ gap:12 }}>
           <Input label="Location" value={form.location} onChange={upd('location')} placeholder="Mumbai, India" />
           <Input label="Website / Portfolio" value={form.website} onChange={upd('website')} placeholder="https://yoursite.com" />
         </div>
-        <div className="form-group">
-          <label className="form-label">Primary Niche</label>
-          <select className="form-input" value={form.niche} onChange={upd('niche')}>
-            <option value="">Select niche…</option>
-            {NICHES.map(n=><option key={n} value={n}>{n}</option>)}
-          </select>
+      </div>
+
+      {/* ── DANGER ZONE ────────────────────────────────────────── */}
+      <div className="card" style={{ border:'1px solid rgba(239,68,68,0.20)', background:'rgba(239,68,68,0.02)', display:'flex', flexDirection:'column', gap:13 }}>
+        <h3 style={{ fontSize:13, fontWeight:700, color:'var(--rose)', display:'flex', alignItems:'center', gap:6 }}>
+          <AlertTriangle size={15} /> Danger Zone
+        </h3>
+        <p style={{ color:'var(--t2)', fontSize:12, lineHeight:1.5 }}>
+          Once you delete your account, there is no going back. All campaigns, settings, and profile details will be permanently removed.
+        </p>
+        <div>
+          <Btn variant="danger" onClick={handleDeleteAccount}>Delete Account</Btn>
         </div>
       </div>
 
