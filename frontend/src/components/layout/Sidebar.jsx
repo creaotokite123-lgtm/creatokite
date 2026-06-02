@@ -109,8 +109,9 @@ export default function Sidebar({ isOpen, onClose }) {
           </button>
         </div>
 
+        
         {/* ── Navigation ────────────────────────────────── */}
-        <div style={{ flex: 1, padding: '10px 0', overflowY: 'auto', overflowX: 'hidden' }}>
+          <div style={{ flex: 1, padding: '10px 0', overflowY: 'auto', overflowX: 'hidden', minHeight: 0 }}>
           {nav.map(({ to, icon: Icon, label, badge }) => (
             <NavLink
               key={to}
@@ -132,8 +133,9 @@ export default function Sidebar({ isOpen, onClose }) {
           ))}
         </div>
 
+        
         {/* ── User Card ─────────────────────────────────── */}
-        <div style={{ padding: '12px 10px', borderTop: '1px solid var(--border)' }}>
+        <div style={{ padding: '12px 10px', borderTop: '1px solid var(--border)', flexShrink: 0 }}>
           <div className="sidebar-user" style={{
             display: 'flex', alignItems: 'center', gap: 9, padding: 8,
             borderRadius: 'var(--r)', background: 'rgba(255,255,255,0.03)', marginBottom: 6,
