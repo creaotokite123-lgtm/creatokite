@@ -92,7 +92,7 @@ Open: `http://localhost:5173`
 
 | Role | Email | Password |
 |---|---|---|
-| Admin | `admin@creatokite.com` | `Admin@12345` |
+| Admin | `admin@creatokite.com` | `************` |
 | Brand | `brand@demo.com` | `Demo@12345` |
 | Creator | `creator1@demo.com` | `Demo@12345` |
 
