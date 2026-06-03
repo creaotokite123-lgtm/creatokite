@@ -134,4 +134,41 @@ export const reelsAPI = {
   getCampaignReels:id  => api.get(`/reels/campaign/${id}`).then(unwrap),
 };
 
+export const ecosystemAPI = {
+  getActivities: p => api.get('/ecosystem/activities', { params: p }).then(unwrap),
+  submitActivity: (id, d) => api.post(`/ecosystem/activities/${id}/submit`, d).then(unwrap),
+  getSubmissions: () => api.get('/ecosystem/submissions').then(unwrap),
+  
+  getLessons: () => api.get('/ecosystem/academy/lessons').then(unwrap),
+  completeLesson: (id, d) => api.post(`/ecosystem/academy/lessons/${id}/complete`, d).then(unwrap),
+  
+  getPosts: p => api.get('/ecosystem/community/posts', { params: p }).then(unwrap),
+  createPost: d => api.post('/ecosystem/community/posts', d).then(unwrap),
+  likePost: id => api.post(`/ecosystem/community/posts/${id}/like`).then(unwrap),
+  votePoll: (id, d) => api.post(`/ecosystem/community/posts/${id}/vote`, d).then(unwrap),
+  getComments: id => api.get(`/ecosystem/community/posts/${id}/comments`).then(unwrap),
+  addComment: (id, d) => api.post(`/ecosystem/community/posts/${id}/comments`, d).then(unwrap),
+  
+  getLeaderboards: p => api.get('/ecosystem/leaderboards', { params: p }).then(unwrap),
+  getHallOfFame: () => api.get('/ecosystem/hall-of-fame').then(unwrap),
+  
+  getShopItems: () => api.get('/ecosystem/coins/shop').then(unwrap),
+  purchaseItem: d => api.post('/ecosystem/coins/purchase', d).then(unwrap),
+  
+  getRecommendations: () => api.get('/ecosystem/recommendations').then(unwrap),
+  
+  getReferrals: () => api.get('/ecosystem/referrals').then(unwrap),
+  redeemReferral: d => api.post('/ecosystem/referrals/redeem', d).then(unwrap),
+  
+  getPendingSubmissions: () => api.get('/ecosystem/admin/submissions').then(unwrap),
+  reviewSubmission: (id, d) => api.post(`/ecosystem/admin/submissions/${id}/review`, d).then(unwrap),
+  superadminOverride: d => api.post('/ecosystem/admin/overrides', d).then(unwrap),
+  getSystemLogs: () => api.get('/ecosystem/admin/system-logs').then(unwrap),
+  getPlatformRevenue: () => api.get('/ecosystem/admin/revenue').then(unwrap),
+
+  createActivity: d => api.post('/ecosystem/admin/activities', d).then(unwrap),
+  updateActivity: (id, d) => api.put(`/ecosystem/admin/activities/${id}`, d).then(unwrap),
+  deleteActivity: id => api.delete(`/ecosystem/admin/activities/${id}`).then(unwrap),
+};
+
 export default api;

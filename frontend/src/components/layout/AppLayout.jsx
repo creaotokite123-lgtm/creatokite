@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
-import BottomNav from './BottomNav';
 
 export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -38,8 +37,6 @@ export default function AppLayout() {
           <Outlet />
         </main>
       </div>
-
-      <BottomNav />
     </div>
   );
 }

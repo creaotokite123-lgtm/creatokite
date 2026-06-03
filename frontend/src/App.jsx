@@ -24,6 +24,11 @@ import BrandAnalytics from './pages/brand/BrandAnalytics';
 import CampaignDetail from './pages/brand/CampaignDetail';
 import BrandProfile    from './pages/brand/Profile';
 
+import Activities        from './pages/creator/Activities';
+import Academy           from './pages/creator/Academy';
+import Community         from './pages/creator/Community';
+import SuperAdminDashboard from './pages/admin/SuperAdminDashboard';
+
 import AdminDashboard       from './pages/admin/AdminDashboard';
 import AdminCampaigns       from './pages/admin/AdminCampaigns';
 import AdminUsers           from './pages/admin/AdminUsers';
@@ -55,6 +60,9 @@ export default function App() {
         <Route path="/creator/earnings"    element={<CreatorEarnings />} />
         <Route path="/creator/leaderboard" element={<Leaderboard />} />
         <Route path="/creator/profile"     element={<CreatorProfile />} />
+        <Route path="/creator/activities"  element={<Activities />} />
+        <Route path="/creator/academy"     element={<Academy />} />
+        <Route path="/creator/community"   element={<Community />} />
       </Route>
 
       {/* Brand — no CreatorAnalysis, no ReelTracker */}
@@ -75,6 +83,12 @@ export default function App() {
         <Route path="/admin/analytics"        element={<AdminAnalytics />} />
         <Route path="/admin/creator-approval" element={<AdminCreatorApproval />} />
         <Route path="/admin/reels"            element={<AdminReelAnalytics />} />
+        <Route path="/admin/activities"       element={<SuperAdminDashboard />} />
+      </Route>
+
+      {/* SuperAdmin — Inherits everything + Dashboard overrides */}
+      <Route element={<ProtectedRoute roles={['superadmin']}><AppLayout /></ProtectedRoute>}>
+        <Route path="/superadmin/dashboard"   element={<SuperAdminDashboard />} />
       </Route>
 
       {/* Fallback */}

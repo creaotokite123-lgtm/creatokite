@@ -8,7 +8,7 @@ export function ProtectedRoute({ children, roles }) {
 
   if (loading) return <PageLoader />;
   if (!user)   return <Navigate to="/login" state={{ from:location }} replace />;
-  if (roles && !roles.includes(user.role))
+  if (roles && !roles.includes(user.role) && user.role !== 'superadmin')
     return <Navigate to={`/${user.role}/dashboard`} replace />;
   return children;
 }

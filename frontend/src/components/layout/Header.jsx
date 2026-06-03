@@ -13,6 +13,9 @@ const PAGE_TITLE = {
   '/creator/earnings':   'Earnings',
   '/creator/leaderboard':'Leaderboard',
   '/creator/profile':    'Profile',
+  '/creator/activities': 'Activity Hub',
+  '/creator/academy':    'Creator Academy',
+  '/creator/community':  'Community Forum',
   '/brand/dashboard':    'Dashboard',
   '/brand/campaigns/create': 'New Campaign',
   '/brand/campaigns':    'My Campaigns',
@@ -23,6 +26,8 @@ const PAGE_TITLE = {
   '/admin/users':        'Users',
   '/admin/analytics':    'Analytics',
   '/admin/creator-approval': 'Creator Approvals',
+  '/admin/activities':   'Activity Hub',
+  '/superadmin/dashboard': 'SuperAdmin Control Center',
 };
 
 export default function Header({ onMenuToggle, sidebarOpen }) {
@@ -73,6 +78,7 @@ export default function Header({ onMenuToggle, sidebarOpen }) {
     setShowUser(false);
     if (user?.role === 'creator') navigate('/creator/profile');
     if (user?.role === 'brand') navigate('/brand/profile');
+    if (user?.role === 'superadmin') navigate('/superadmin/dashboard');
   };
 
   return (
@@ -224,15 +230,15 @@ export default function Header({ onMenuToggle, sidebarOpen }) {
               <div style={{ fontSize: 11, color: 'var(--t3)', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {user?.email}
               </div>
-              <span className={`badge badge-${user?.role === 'admin' ? 'gold' : user?.role === 'brand' ? 'blue' : 'purple'}`}
+              <span className={`badge badge-${user?.role === 'superadmin' ? 'red' : user?.role === 'admin' ? 'gold' : user?.role === 'brand' ? 'blue' : 'purple'}`}
                 style={{ marginTop: 6, fontSize: 10 }}>
                 {user?.role}
               </span>
             </div>
-            {(user?.role === 'creator' || user?.role === 'brand') && (
+            {(user?.role === 'creator' || user?.role === 'brand' || user?.role === 'superadmin') && (
               <button onClick={goProfile} className="btn btn-ghost btn-sm w-full"
                 style={{ justifyContent: 'flex-start', padding: '10px 14px', borderRadius: 0 }}>
-                <User size={13} /> Profile
+                <User size={13} /> {user?.role === 'superadmin' ? 'Control Panel' : 'Profile'}
               </button>
             )}
           </div>

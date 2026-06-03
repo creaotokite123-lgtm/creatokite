@@ -33,12 +33,52 @@ router.get('/', async (req, res) => {
 /* GET /api/campaigns/brand — brand's own campaigns */
 router.get('/brand', auth, async (req, res) => {
   try {
-    if (!['brand','admin'].includes(req.user.role))
+    if (!['brand','admin','superadmin'].includes(req.user.role))
       return res.status(403).json({ success:false, message:'Brand only' });
+    
     const campaigns = await Campaign.find({ brand:req.user._id })
-      .populate('assignedCreators.creator','displayName avatar handle niche creatorScore trustScore rank')
+      .populate('assignedCreators.creator','displayName avatar handle niche creatorScore trustScore rank platforms reputationScore creatorPowerScore completedCampaigns')
       .sort({ createdAt:-1 });
-    res.json({ success:true, campaigns });
+
+    // Blind Brand Match system: mask details before assignment is approved
+    const isBrand = req.user.role === 'brand';
+    const processedCampaigns = campaigns.map(c => {
+      const obj = c.toObject();
+      if (isBrand) {
+        obj.assignedCreators = (obj.assignedCreators || []).map(a => {
+          if (!a.creator) return a;
+          const statusVal = a.status;
+          const isApproved = ['approved', 'in_progress', 'completed', 'submitted', 'revision'].includes(statusVal);
+          
+          if (!isApproved) {
+            const creatorIdStr = a.creator._id.toString();
+            const maskedId = `CR-${creatorIdStr.slice(-6).toUpperCase()}`;
+            return {
+              ...a,
+              creator: {
+                _id: a.creator._id,
+                displayName: `Creator ${maskedId}`,
+                avatar: '',
+                handle: 'hidden_handle',
+                niche: a.creator.niche,
+                creatorScore: a.creator.creatorScore,
+                trustScore: a.creator.trustScore,
+                rank: a.creator.rank,
+                reputationScore: a.creator.reputationScore || 75,
+                creatorPowerScore: a.creator.creatorPowerScore || 70,
+                completedCampaigns: a.creator.completedCampaigns || 0,
+                platforms: a.creator.platforms || {},
+                isBlindMatch: true
+              }
+            };
+          }
+          return a;
+        });
+      }
+      return obj;
+    });
+
+    res.json({ success:true, campaigns: processedCampaigns });
   } catch(e) { res.status(500).json({ success:false, message:e.message }); }
 });
 

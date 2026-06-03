@@ -6,7 +6,7 @@ const { User, Notification }     = require('../models');
 const { auth, setAuthCookies, clearAuthCookies } = require('../middleware/auth');
 const { computeScore, getRank, computeCAS }       = require('../services/scoring');
 const { fetchSocialData }                          = require('../services/socialFetcher');
-const sendLoginMail = require("../utils/sendEmail");
+const { sendLoginMail } = require("../utils/sendEmail");
 
 
 const router    = express.Router();
@@ -205,8 +205,9 @@ router.get(
         validateBeforeSave: false,
       });
 
+      const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
       return res.redirect(
-        `https://creatokitee.netlify.app/login-success?token=${token}`
+        `${clientUrl}/login-success?token=${token}`
       );
 
     } catch (error) {

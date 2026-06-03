@@ -5,16 +5,19 @@ import { Avatar } from '../ui';
 import {
   LayoutDashboard, Megaphone, Users, BarChart2,
   Trophy, PlusCircle, LogOut, TrendingUp, Wallet,
-  Target, UserCheck, Settings, X, Play,
+  Target, UserCheck, Settings, X, Play, Activity,
 } from 'lucide-react';
 
 /* Creator — no Reel Tracker, no Creator Analysis */
 const CREATOR_NAV = [
   { to: '/creator/dashboard',   icon: LayoutDashboard, label: 'Dashboard'    },
   { to: '/creator/assigned',    icon: Target,          label: 'My Campaigns' },
+  { to: '/creator/activities',  icon: Play,            label: 'Activities'   },
+  { to: '/creator/academy',     icon: Trophy,          label: 'Academy'      },
+  { to: '/creator/community',   icon: Users,           label: 'Community'    },
   { to: '/creator/analytics',   icon: BarChart2,       label: 'Analytics'    },
   { to: '/creator/earnings',    icon: Wallet,          label: 'Earnings'     },
-  { to: '/creator/leaderboard', icon: Trophy,          label: 'Leaderboard'  },
+  { to: '/creator/leaderboard', icon: TrendingUp,      label: 'Leaderboard'  },
   { to: '/creator/profile',     icon: Settings,        label: 'Profile'      },
 ];
 
@@ -30,11 +33,23 @@ const BRAND_NAV = [
 /* Admin — no Creator Analysis; Reel Analytics stays */
 const ADMIN_NAV = [
   { to: '/admin/dashboard',        icon: LayoutDashboard, label: 'Dashboard'         },
+  { to: '/admin/activities',       icon: Activity,        label: 'Activity Hub'      },
   { to: '/admin/campaigns',        icon: Megaphone,       label: 'Campaigns'         },
   { to: '/admin/users',            icon: Users,           label: 'Users'             },
   { to: '/admin/analytics',        icon: TrendingUp,      label: 'Analytics'         },
   { to: '/admin/creator-approval', icon: UserCheck,       label: 'Creator Approvals' },
   { to: '/admin/reels',            icon: Play,            label: 'Reel Analytics',   badge: 'NEW' },
+];
+
+/* SuperAdmin — inherits Admin + Override Controls */
+const SUPERADMIN_NAV = [
+  { to: '/superadmin/dashboard',   icon: LayoutDashboard, label: 'Control Center'    },
+  { to: '/admin/activities',       icon: Activity,        label: 'Activity Hub'      },
+  { to: '/admin/campaigns',        icon: Megaphone,       label: 'Campaigns'         },
+  { to: '/admin/users',            icon: Users,           label: 'Users'             },
+  { to: '/admin/analytics',        icon: TrendingUp,      label: 'Analytics'         },
+  { to: '/admin/creator-approval', icon: UserCheck,       label: 'Creator Approvals' },
+  { to: '/admin/reels',            icon: Play,            label: 'Reel Analytics'    },
 ];
 
 export default function Sidebar({ isOpen, onClose }) {
@@ -43,13 +58,16 @@ export default function Sidebar({ isOpen, onClose }) {
 
   const nav = user?.role === 'creator' ? CREATOR_NAV
             : user?.role === 'brand'   ? BRAND_NAV
+            : user?.role === 'superadmin' ? SUPERADMIN_NAV
             : ADMIN_NAV;
 
-  const roleColor = user?.role === 'admin'   ? 'var(--gold)'
+  const roleColor = user?.role === 'superadmin' ? 'var(--rose)'
+                  : user?.role === 'admin'   ? 'var(--gold)'
                   : user?.role === 'brand'   ? 'var(--acc)'
                   : 'var(--p2)';
 
-  const roleLabel = user?.role === 'admin'   ? 'Control Center'
+  const roleLabel = user?.role === 'superadmin' ? 'Control Center (SA)'
+                  : user?.role === 'admin'   ? 'Control Center'
                   : user?.role === 'brand'   ? 'Brand Portal'
                   : 'Creator Studio';
 
@@ -136,21 +154,21 @@ export default function Sidebar({ isOpen, onClose }) {
 
         
         {/* ── User Card ─────────────────────────────────── */}
-        <div style={{ padding: '12px 10px', borderTop: '1px solid var(--border)', flexShrink: 0 }}>
+        <div style={{ padding: '8px 10px calc(18px + var(--safe-bottom))', borderTop: '1px solid var(--border)', flexShrink: 0 }}>
           <div className="sidebar-user" style={{
-            display: 'flex', alignItems: 'center', gap: 9, padding: 8,
-            borderRadius: 'var(--r)', background: 'rgba(255,255,255,0.03)', marginBottom: 6,
+            display: 'flex', alignItems: 'center', gap: 8, padding: '6px 8px',
+            borderRadius: 'var(--r)', background: 'rgba(255,255,255,0.03)', marginBottom: 4,
           }}>
-            <Avatar src={user?.avatar} name={user?.displayName} size={30} />
+            <Avatar src={user?.avatar} name={user?.displayName} size={26} />
             <div className="sidebar-user-info" style={{ flex: 1, minWidth: 0 }}>
               <div style={{
-                fontSize: 12, fontWeight: 600, color: 'var(--t1)',
+                fontSize: 11, fontWeight: 600, color: 'var(--t1)',
                 overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
               }}>
                 {user?.displayName}
               </div>
               <div style={{
-                fontSize: 10, color: 'var(--t3)',
+                fontSize: 9, color: 'var(--t3)',
                 overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
               }}>
                 {user?.email}
@@ -160,10 +178,10 @@ export default function Sidebar({ isOpen, onClose }) {
           <button
             onClick={handleLogout}
             className="btn btn-ghost btn-sm w-full"
-            style={{ justifyContent: 'flex-start', color: 'var(--rose)' }}
+            style={{ justifyContent: 'flex-start', color: 'var(--rose)', padding: '4px 8px', height: '28px', fontSize: '11px' }}
           >
-            <LogOut size={13} aria-hidden="true" />
-            <span className="nav-item-label">Logout</span>
+            <LogOut size={12} aria-hidden="true" />
+            <span className="nav-item-label" style={{ fontSize: '11px' }}>Logout</span>
           </button>
         </div>
       </nav>

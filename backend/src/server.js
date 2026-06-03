@@ -73,6 +73,7 @@ app.use('/api/admin',     require('./routes/admin'));
 app.use('/api/users',     require('./routes/users'));
 app.use('/api/analytics', require('./routes/analytics'));
 app.use('/api/reels',     require('./routes/reels'));
+app.use('/api/ecosystem', require('./routes/ecosystem'));
 
 /* ── Health ───────────────────────────────────────────────── */
 app.get('/health', (_req, res) =>

@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   displayName:  { type: String, required: true, trim: true },
   email:        { type: String, required: true, unique: true, lowercase: true, trim: true },
   password:     {type: String, default: '',},
-  role:         { type: String, enum: ['creator','brand','admin'], default: 'creator' },
+  role:         { type: String, enum: ['creator','brand','admin','superadmin'], default: 'creator' },
   avatar:       { type: String, default: '' },
   handle:       { type: String, unique: true, sparse: true, lowercase: true, trim: true },
   bio:          { type: String, maxlength: 500, default: '' },
@@ -83,6 +83,36 @@ const userSchema = new mongoose.Schema({
   industry:            { type: String, default: '' },
   totalSpent:          { type: Number, default: 0 },
   brandRepScore:       { type: Number, default: 80 },
+
+  // Gamification fields
+  xp:                  { type: Number, default: 0 },
+  activityXp:          { type: Number, default: 0 },
+  academyXp:           { type: Number, default: 0 },
+  campaignXp:          { type: Number, default: 0 },
+  communityXp:         { type: Number, default: 0 },
+  coins:               { type: Number, default: 0 },
+  highestStreak:       { type: Number, default: 0 },
+  reputationScore:     { type: Number, default: 0 },
+  creatorPowerScore:   { type: Number, default: 0 },
+  referralCode:        { type: String, unique: true, sparse: true },
+  referredBy:          { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  referralCount:       { type: Number, default: 0 },
+  certificates: [{
+    name: String,
+    courseName: String,
+    url: String,
+    earnedAt: { type: Date, default: Date.now }
+  }],
+  trophies: [{
+    name: String,
+    icon: String,
+    earnedAt: { type: Date, default: Date.now }
+  }],
+  milestones: [{
+    name: String,
+    description: String,
+    earnedAt: { type: Date, default: Date.now }
+  }],
 }, { timestamps: true });
 
 userSchema.index({ creatorScore: -1 });
@@ -217,4 +247,102 @@ module.exports = {
   Transaction:  mongoose.model('Transaction',  transactionSchema),
   Chat:         mongoose.model('Chat',         chatSchema),
   Message:      mongoose.model('Message',      messageSchema),
+};
+
+/* ── ACTIVITY ─────────────────────────────────────────── */
+const activitySchema = new mongoose.Schema({
+  title:        { type: String, required: true },
+  description:  { type: String, required: true },
+  type:         { type: String, enum: ['daily', 'weekly', 'monthly', 'special', 'community', 'learning', 'referral', 'platform'], required: true },
+  xpReward:     { type: Number, default: 30 },
+  coinReward:   { type: Number, default: 10 },
+  badgeReward:  { type: String, default: '' },
+  targetUrl:    { type: String, default: '' },
+  isChallenge:  { type: Boolean, default: false },
+  isActive:     { type: Boolean, default: true },
+}, { timestamps: true });
+
+/* ── SUBMISSION ───────────────────────────────────────── */
+const submissionSchema = new mongoose.Schema({
+  creator:       { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  activity:      { type: mongoose.Schema.Types.ObjectId, ref: 'Activity', required: true },
+  submissionUrl: { type: String, default: '' },
+  submissionNote:{ type: String, default: '' },
+  status:        { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+  rating:        { type: Number, default: 5 },
+  adminFeedback: { type: String, default: '' },
+  reviewedBy:    { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  reviewedAt:    { type: Date },
+}, { timestamps: true });
+
+/* ── LESSON ───────────────────────────────────────────── */
+const lessonSchema = new mongoose.Schema({
+  title:            { type: String, required: true },
+  category:         { type: String, required: true },
+  type:             { type: String, enum: ['video', 'article', 'quiz', 'assignment'], required: true },
+  content:          { type: String, required: true },
+  quizQuestions: [{
+    question: String,
+    options: [String],
+    correctAnswerIndex: Number
+  }],
+  assignmentPrompt: { type: String, default: '' },
+  xpReward:         { type: Number, default: 50 },
+  coinReward:       { type: Number, default: 20 },
+  sortOrder:        { type: Number, default: 0 },
+}, { timestamps: true });
+
+/* ── LESSON COMPLETION ───────────────────────────────── */
+const lessonCompletionSchema = new mongoose.Schema({
+  creator:     { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  lesson:      { type: mongoose.Schema.Types.ObjectId, ref: 'Lesson', required: true },
+  category:    { type: String, required: true },
+  completedAt: { type: Date, default: Date.now },
+});
+
+/* ── COMMUNITY POST ───────────────────────────────────── */
+const postSchema = new mongoose.Schema({
+  creator:        { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  title:          { type: String, required: true },
+  content:        { type: String, required: true },
+  likes:          [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  commentsCount:  { type: Number, default: 0 },
+  category:       { type: String, default: 'General' },
+  pollOptions: [{
+    text: String,
+    votes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+  }],
+  isAnnouncement: { type: Boolean, default: false },
+}, { timestamps: true });
+
+/* ── COMMUNITY COMMENT ────────────────────────────────── */
+const commentSchema = new mongoose.Schema({
+  post:   { type: mongoose.Schema.Types.ObjectId, ref: 'Post', required: true },
+  sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  text:   { type: String, required: true },
+  likes:  [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+}, { timestamps: true });
+
+/* ── SYSTEM LOG ───────────────────────────────────────── */
+const systemLogSchema = new mongoose.Schema({
+  action:      { type: String, required: true },
+  performedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  details:     { type: String, default: '' },
+  timestamp:   { type: Date, default: Date.now },
+});
+
+module.exports = {
+  User:             mongoose.model('User',             userSchema),
+  Campaign:         mongoose.model('Campaign',         campaignSchema),
+  Notification:     mongoose.model('Notification',     notificationSchema),
+  Transaction:      mongoose.model('Transaction',      transactionSchema),
+  Chat:             mongoose.model('Chat',             chatSchema),
+  Message:          mongoose.model('Message',          messageSchema),
+  Activity:         mongoose.model('Activity',         activitySchema),
+  Submission:       mongoose.model('Submission',       submissionSchema),
+  Lesson:           mongoose.model('Lesson',           lessonSchema),
+  LessonCompletion: mongoose.model('LessonCompletion', lessonCompletionSchema),
+  Post:             mongoose.model('Post',             postSchema),
+  Comment:          mongoose.model('Comment',          commentSchema),
+  SystemLog:        mongoose.model('SystemLog',        systemLogSchema),
 };

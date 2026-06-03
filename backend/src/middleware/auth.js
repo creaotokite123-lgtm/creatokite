@@ -46,9 +46,10 @@ async function auth(req, res, next) {
 }
 
 /* ── Role guards ──────────────────────────────────────────── */
-const adminOnly   = (req, res, next) => req.user?.role === 'admin'   ? next() : res.status(403).json({ success: false, message: 'Admin access required.' });
-const brandOnly   = (req, res, next) => req.user?.role === 'brand'   ? next() : res.status(403).json({ success: false, message: 'Brand access required.' });
-const creatorOnly = (req, res, next) => req.user?.role === 'creator' ? next() : res.status(403).json({ success: false, message: 'Creator access required.' });
+const adminOnly   = (req, res, next) => ['admin', 'superadmin'].includes(req.user?.role)   ? next() : res.status(403).json({ success: false, message: 'Admin access required.' });
+const brandOnly   = (req, res, next) => ['brand', 'superadmin'].includes(req.user?.role)   ? next() : res.status(403).json({ success: false, message: 'Brand access required.' });
+const creatorOnly = (req, res, next) => ['creator', 'superadmin'].includes(req.user?.role) ? next() : res.status(403).json({ success: false, message: 'Creator access required.' });
+const superadminOnly = (req, res, next) => req.user?.role === 'superadmin' ? next() : res.status(403).json({ success: false, message: 'SuperAdmin access required.' });
 
 /* ── Cookie setter helper (used in auth routes) ───────────── */
 const setAuthCookies = (res, token, refreshToken) => {
@@ -68,4 +69,4 @@ const clearAuthCookies = (res) => {
   res.clearCookie('ck_refresh', { httpOnly: true, path: '/' });
 };
 
-module.exports = { auth, adminOnly, brandOnly, creatorOnly, setAuthCookies, clearAuthCookies };
+module.exports = { auth, adminOnly, brandOnly, creatorOnly, superadminOnly, setAuthCookies, clearAuthCookies };
