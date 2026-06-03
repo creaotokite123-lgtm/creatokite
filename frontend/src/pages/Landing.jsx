@@ -92,7 +92,7 @@ export default function Landing() {
         backdropFilter:scrolled?'blur(20px)':'none',
         borderBottom:scrolled?'1px solid var(--border)':'none',transition:'all .3s'}}>
         <div style={{display:'flex',alignItems:'center',gap:8}}>
-          <img src="/src/assets/logo.jpeg" alt="CreatoKite"
+          <img src="/logo.jpeg" alt="CreatoKite"
             style={{width:28,height:28,borderRadius:7,objectFit:'contain',display:'block'}}/>
           <span style={{fontFamily:'var(--fd)',fontWeight:800,fontSize:16}}>Creatokite</span>
          
@@ -224,7 +224,7 @@ export default function Landing() {
       {/* FOOTER */}
       <footer style={{borderTop:'1px solid var(--border)',padding:'22px 40px',display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:12}}>
         <div style={{display:'flex',alignItems:'center',gap:7}}>
-          <img src="/src/assets/logo.jpeg" alt="CreatoKite"
+          <img src="/logo.jpeg" alt="CreatoKite"
            style={{width:22,height:22,borderRadius:6,objectFit:'contain',display:'block'}}/>
           <span style={{fontFamily:'var(--fd)',fontWeight:800,fontSize:14}}>Creatokite</span>
         </div>

@@ -36,7 +36,7 @@ export default function VerifyEmail() {
       <div style={{ width: '100%', maxWidth: 420 }}>
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
            
-          <img src="/src/assets/logo.jpeg" alt="CreatoKite"
+          <img src="/logo.jpeg" alt="CreatoKite"
             style={{ width:48, height:48, borderRadius:14, objectFit:'contain',
                margin:'0 auto 14px', display:'block' }}/>
           <h1 style={{ fontFamily: 'var(--fd)', fontSize: 'clamp(20px,5vw,26px)', fontWeight: 800 }}>

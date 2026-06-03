@@ -85,7 +85,7 @@ export default function Login() {
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
 
           <img 
-           src="/src/assets/logo.jpeg" 
+           src="/logo.jpeg" 
            alt="CreatoKite"
            style={{
              width: 48, height: 48, borderRadius: 14,

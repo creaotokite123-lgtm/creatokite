@@ -367,7 +367,7 @@ export default function Register() {
                 </button>
              
                 <div style={{ textAlign:'center', marginBottom:28 }}>
-                  <img src="/src/assets/logo.jpeg" alt="CreatoKite"
+                  <img src="/logo.jpeg" alt="CreatoKite"
                     style={{ width:44,height:44,borderRadius:12,objectFit:'contain',margin:'0 auto 14px',display:'block' }}/>
                   <h1 style={{ fontFamily:'var(--fd)', fontSize:22, fontWeight:800 }}>Create your account</h1>
                   <p style={{ color:'var(--t2)', fontSize:13, marginTop:4 }}>Join India's AI-Powered Creator Campaign OS</p>
@@ -466,7 +466,7 @@ export default function Register() {
     <div style={{ minHeight:'100vh', background:'var(--bg)', display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
       <div style={{ width:'100%', maxWidth:480 }}>
         <div style={{ textAlign:'center', marginBottom:24 }}>
-          <img src="/src/assets/logo.jpeg" alt="CreatoKite"
+          <img src="/logo.jpeg" alt="CreatoKite"
             style={{ width:44,height:44,borderRadius:12,objectFit:'contain',margin:'0 auto 14px',display:'block' }}/>
 
           <h1 style={{ fontFamily:'var(--fd)', fontSize:20, fontWeight:800 }}>Connect Your Social Profiles</h1>
@@ -542,7 +542,7 @@ export default function Register() {
     <div style={{ minHeight:'100vh', background:'var(--bg)', display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
       <div style={{ width:'100%', maxWidth:380, textAlign:'center' }}>
            
-           <img src="/src/assets/logo.jpeg" alt="CreatoKite"
+           <img src="/logo.jpeg" alt="CreatoKite"
             style={{ width:44,height:44,borderRadius:12,objectFit:'contain',margin:'0 auto 20px',display:'block' }}/>
 
         <h2 style={{ fontFamily:'var(--fd)', fontWeight:800, fontSize:19, marginBottom:6 }}>Analyzing your profile…</h2>

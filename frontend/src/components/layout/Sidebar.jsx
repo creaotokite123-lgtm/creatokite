@@ -101,7 +101,7 @@ export default function Sidebar({ isOpen, onClose }) {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
             <img 
-  src="/src/assets/logo.jpeg" 
+  src="/logo.jpeg" 
   alt="CreatoKite" 
   style={{ width:30, height:30, borderRadius:8, objectFit:'contain', flexShrink:0 }} 
                    />
