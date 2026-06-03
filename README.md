@@ -43,7 +43,7 @@ CreatoKite/
 cd backend
 npm install
 
-cd frontend
+cd ../frontend
 npm install
 ```
 
@@ -120,10 +120,6 @@ CAS combines weighted dimensions including engagement quality, audience reach, a
 
 ## Documentation
 
-- Setup details: `SETUP.md`
-- Deployment guide: `DEPLOY.md`
-- Change history: `CHANGES.md`
-
-## License
-
-No explicit license file is present in this repository.
+- Setup details: [SETUP.md](./SETUP.md)
+- Deployment guide: [DEPLOY.md](./DEPLOY.md)
+- Change history: [CHANGES.md](./CHANGES.md)
