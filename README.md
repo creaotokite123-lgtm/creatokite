@@ -40,17 +40,17 @@ creatokite/
 ### 1) Install dependencies
 
 ```bash
-cd /tmp/workspace/creaotokite123-lgtm/creatokite/backend
+cd backend
 npm install
 
-cd /tmp/workspace/creaotokite123-lgtm/creatokite/frontend
+cd frontend
 npm install
 ```
 
 ### 2) Configure environment
 
 ```bash
-cd /tmp/workspace/creaotokite123-lgtm/creatokite/backend
+cd backend
 cp .env.example .env
 ```
 
@@ -70,7 +70,7 @@ Optional APIs for richer social data:
 ### 3) Seed demo data (recommended)
 
 ```bash
-cd /tmp/workspace/creaotokite123-lgtm/creatokite/backend
+cd backend
 npm run seed
 ```
 
@@ -78,11 +78,11 @@ npm run seed
 
 ```bash
 # backend
-cd /tmp/workspace/creaotokite123-lgtm/creatokite/backend
+cd backend
 npm run dev
 
 # frontend (new terminal)
-cd /tmp/workspace/creaotokite123-lgtm/creatokite/frontend
+cd frontend
 npm run dev
 ```
 
@@ -120,9 +120,9 @@ CAS combines weighted dimensions including engagement quality, audience reach, a
 
 ## Documentation
 
-- Setup details: `/tmp/workspace/creaotokite123-lgtm/creatokite/SETUP.md`
-- Deployment guide: `/tmp/workspace/creaotokite123-lgtm/creatokite/DEPLOY.md`
-- Change history: `/tmp/workspace/creaotokite123-lgtm/creatokite/CHANGES.md`
+- Setup details: `SETUP.md`
+- Deployment guide: `DEPLOY.md`
+- Change history: `CHANGES.md`
 
 ## License
 
