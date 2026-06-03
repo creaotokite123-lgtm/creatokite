@@ -1,6 +1,6 @@
-# Creatokite
+# CreatoKite
 
-Creatokite is an AI-powered creator campaign operating system that connects brands and creators, streamlines campaign workflows, and helps admins approve high-quality creators using a data-backed **Creator Automation Score (CAS)**.
+CreatoKite is an AI-powered creator campaign operating system that connects brands and creators, streamlines campaign workflows, and helps admins approve high-quality creators using a data-backed **Creator Automation Score (CAS)**.
 
 ## Key Features
 
@@ -21,7 +21,7 @@ Creatokite is an AI-powered creator campaign operating system that connects bran
 ## Project Structure
 
 ```text
-creatokite/
+CreatoKite/
 ├── backend/    # Express API, DB models, business logic, seed scripts
 ├── frontend/   # React + Vite SPA
 ├── SETUP.md    # detailed local setup guide
