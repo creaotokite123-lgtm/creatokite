@@ -30,6 +30,33 @@ const PAGE_TITLE = {
   '/superadmin/dashboard': 'SuperAdmin Control Center',
 };
 
+/* Renders notification body text with clickable URLs */
+function renderBodyWithLinks(text) {
+  if (!text) return null;
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const parts = text.split(urlRegex);
+  return parts.map((part, i) =>
+    urlRegex.test(part) ? (
+      <a
+        key={i}
+        href={part}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={e => e.stopPropagation()}
+        style={{
+          color: 'var(--p)',
+          textDecoration: 'underline',
+          wordBreak: 'break-all',
+        }}
+      >
+        {part}
+      </a>
+    ) : (
+      part
+    )
+  );
+}
+
 export default function Header({ onMenuToggle, sidebarOpen }) {
   const { user }              = useAuth();
   const { theme, toggleTheme } = useTheme();
@@ -192,7 +219,7 @@ export default function Header({ onMenuToggle, sidebarOpen }) {
                   <div style={{ fontSize: 13, fontWeight: n.read ? 400 : 600, color: 'var(--t1)', marginBottom: 3 }}>
                     {n.title}
                   </div>
-                  <div style={{ fontSize: 12, color: 'var(--t2)' }}>{n.body}</div>
+                  <div style={{ fontSize: 12, color: 'var(--t2)', lineHeight: 1.5 }}>{renderBodyWithLinks(n.body)}</div>
                   <div style={{ fontSize: 10, color: 'var(--t3)', marginTop: 4 }}>
                     {new Date(n.createdAt).toLocaleDateString()}
                   </div>
