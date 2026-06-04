@@ -5,7 +5,7 @@ import { Avatar } from '../ui';
 import {
   LayoutDashboard, Megaphone, Users, BarChart2,
   Trophy, PlusCircle, LogOut, TrendingUp, Wallet,
-  Target, UserCheck, Settings, X, Play, Activity,
+  Target, UserCheck, Settings, X, Play, Activity, Home,
 } from 'lucide-react';
 
 /* Creator — no Reel Tracker, no Creator Analysis */
@@ -131,6 +131,32 @@ export default function Sidebar({ isOpen, onClose }) {
         
         {/* ── Navigation ────────────────────────────────── */}
           <div style={{ flex: 1, padding: '10px 0', overflowY: 'auto', overflowX: 'hidden', minHeight: 0 }}>
+
+          {/* Home / Landing page link */}
+          <button
+            onClick={() => { onClose(); navigate('/'); }}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              width: '100%',
+              padding: '9px 14px', margin: '0 0 2px',
+              borderRadius: 'var(--r)',
+              color: 'rgba(136,146,164,0.75)',
+              fontSize: 13, fontWeight: 500,
+              background: 'none', border: 'none', cursor: 'pointer',
+              textDecoration: 'none',
+              transition: 'all 0.15s',
+              borderBottom: '1px solid var(--border)',
+              paddingBottom: 11,
+              marginBottom: 6,
+              fontFamily: 'var(--fb)',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,107,87,0.07)'; e.currentTarget.style.color = 'var(--p)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = ''; e.currentTarget.style.color = 'rgba(136,146,164,0.75)'; }}
+          >
+            <Home size={15} aria-hidden="true" />
+            <span className="nav-item-label">Home Page</span>
+          </button>
+
           {nav.map(({ to, icon: Icon, label, badge }) => (
             <NavLink
               key={to}
