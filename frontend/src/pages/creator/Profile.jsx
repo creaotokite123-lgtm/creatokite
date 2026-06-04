@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { usersAPI, analyticsAPI } from '../../api';
 import { Btn, Input, Textarea } from '../../components/ui';
 import toast from 'react-hot-toast';
-import { Zap, RefreshCw, CheckCircle, AlertTriangle, Clock } from 'lucide-react';
+import { Zap, Send, CheckCircle, AlertTriangle, Clock } from 'lucide-react';
 
 const NICHES = ['Tech','Beauty','Fashion','Fitness','Food','Travel','Gaming','Education','Finance','Lifestyle','Music','Art','Other'];
 
@@ -112,6 +112,8 @@ export default function Profile() {
   const [analyzing, setAnalyzing] = useState(false);
   const [stepIdx,   setStepIdx]   = useState(0);
   const [casData,   setCasData]   = useState(null);
+  const [requestingReanalysis, setRequestingReanalysis] = useState(false);
+  const [reanalysisRequested,  setReanalysisRequested]  = useState(false);
 
   // Load existing CAS on mount
   useEffect(() => {
@@ -179,6 +181,20 @@ export default function Profile() {
         : rawMsg || 'Analysis failed. Check your URLs and try again.';
       toast.error(displayMsg);
     } finally { setAnalyzing(false); }
+  };
+
+  const handleRequestReanalysis = async () => {
+    if (reanalysisRequested) return;
+    setRequestingReanalysis(true);
+    try {
+      await analyticsAPI.requestReanalysis();
+      setReanalysisRequested(true);
+      toast.success('✅ Re-analysis request sent to admin!');
+    } catch(e) {
+      toast.error(e.response?.data?.message || 'Request failed. Try again.');
+    } finally {
+      setRequestingReanalysis(false);
+    }
   };
 
   const complete = user?.profileComplete || 0;
@@ -250,13 +266,16 @@ export default function Profile() {
           </div>
         </div>
 
-        <Btn variant="primary" onClick={analyzeProfile} disabled={analyzing}
-          style={{ display:'flex', alignItems:'center', gap:7 }}>
-          {analyzing
-            ? <RefreshCw size={13} style={{ animation:'spin 1s linear infinite' }}/>
-            : <Zap size={13}/>}
-          {analyzing ? 'Analyzing…' : user?.socialAnalyzed ? 'Re-fetch & Update' : 'Auto-Fetch & Submit for Approval'}
-        </Btn>
+        {/* Show fetch button only if not yet analyzed */}
+        {!user?.socialAnalyzed && (
+          <Btn variant="primary" onClick={analyzeProfile} disabled={analyzing}
+            style={{ display:'flex', alignItems:'center', gap:7 }}>
+            {analyzing
+              ? <Zap size={13} style={{ animation:'spin 1s linear infinite' }}/>
+              : <Zap size={13}/>}
+            {analyzing ? 'Analyzing…' : 'Auto-Fetch & Submit for Approval'}
+          </Btn>
+        )}
 
         {/* Analysis steps animation */}
         {analyzing && (
@@ -332,7 +351,7 @@ export default function Profile() {
           </div>
         )}
 
-        {/* Already analyzed — show quick summary */}
+        {/* Already analyzed — show quick summary with re-analysis request */}
         {user?.socialAnalyzed && !casData && !analyzing && (
           <div style={{ marginTop:14, padding:'12px 16px', background:'var(--s2)', borderRadius:10,
             border:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between', gap:10 }}>
@@ -346,10 +365,22 @@ export default function Profile() {
               <div style={{ fontSize:11, color:'var(--t3)', marginTop:2 }}>
                 {user.analyzedAt ? `Last fetched: ${new Date(user.analyzedAt).toLocaleDateString('en-IN')}` : ''}
               </div>
+              <div style={{ fontSize:11, color:'var(--t3)', marginTop:4 }}>
+                Need updated stats? Ask admin to re-analyze your profile.
+              </div>
             </div>
-            <Btn variant="ghost" size="sm" onClick={analyzeProfile}
-              style={{ display:'flex', alignItems:'center', gap:5, flexShrink:0 }}>
-              <RefreshCw size={12}/> Refresh
+            <Btn
+              variant={reanalysisRequested ? 'ghost' : 'secondary'}
+              size="sm"
+              onClick={handleRequestReanalysis}
+              disabled={requestingReanalysis || reanalysisRequested}
+              style={{ display:'flex', alignItems:'center', gap:5, flexShrink:0 }}
+            >
+              {reanalysisRequested
+                ? <><CheckCircle size={12}/> Requested</>
+                : requestingReanalysis
+                  ? 'Sending…'
+                  : <><Send size={12}/> Request Re-analysis</>}
             </Btn>
           </div>
         )}
@@ -384,7 +415,7 @@ export default function Profile() {
             ))}
           </div>
           <p style={{ fontSize:11, color:'var(--t3)', marginTop:10 }}>
-            These update automatically when you re-fetch your social profiles above.
+            These update automatically when admin performs a re-analysis.
           </p>
         </div>
       )}
