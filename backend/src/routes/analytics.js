@@ -249,4 +249,35 @@ router.get('/analyze/registered', async (req, res) => {
   }
 });
 
+/* ── POST /api/analytics/creator/request-reanalysis ──────
+   Creator requests admin to re-analyze their social profile.
+   No re-fetch happens here — just sends a notification to all admins.
+─────────────────────────────────────────────────────────── */
+router.post('/creator/request-reanalysis', auth, async (req, res) => {
+  try {
+    if (req.user.role !== 'creator')
+      return res.status(403).json({ success:false, message:'Creators only' });
+
+    if (!req.user.socialAnalyzed)
+      return res.status(400).json({ success:false, message:'Submit your social profile first before requesting re-analysis.' });
+
+    // Notify all admins
+    const admins = await User.find({ role:'admin' }).select('_id');
+    await Promise.all(admins.map(a =>
+      Notification.create({
+        user:  a._id,
+        type:  'creator_approval',
+        title: '🔄 Re-analysis Requested',
+        body:  `${req.user.displayName} has requested a re-analysis of their social profile. Current CAS: ${req.user.casScore || 0}/100.`,
+        link:  '/admin/creator-approval',
+      })
+    ));
+
+    return res.json({ success:true, message:'Re-analysis request sent to admin.' });
+  } catch(e) {
+    console.error('[Request Reanalysis]', e);
+    res.status(500).json({ success:false, message:e.message || 'Request failed' });
+  }
+});
+
 module.exports = router;
