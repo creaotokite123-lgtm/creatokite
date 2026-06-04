@@ -119,6 +119,7 @@ export const analyticsAPI = {
   creator:            () => api.get('/analytics/creator').then(unwrap),
   connectSocial:      d  => api.post('/analytics/creator/connect', d).then(unwrap),
   creatorCAS:         () => api.get('/analytics/creator/cas').then(unwrap),
+  requestReanalysis:  () => api.post('/analytics/creator/request-reanalysis').then(unwrap),
   analyzeCreator:     d  => api.post('/analytics/analyze', d).then(unwrap),
   registeredCreators: p  => api.get('/analytics/analyze/registered', { params: p }).then(unwrap),
 };
