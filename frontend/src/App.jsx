@@ -36,18 +36,12 @@ import AdminAnalytics       from './pages/admin/AdminAnalytics';
 import AdminCreatorApproval from './pages/admin/AdminCreatorApproval';
 import AdminReelAnalytics   from './pages/admin/AdminReelAnalytics';
 
-function RootRedirect() {
-  const { user, loading } = useAuth();
-  if (loading) return <PageLoader />;
-  if (!user)   return <Landing />;
-  return <Navigate to={`/${user.role}/dashboard`} replace />;
-}
 
 export default function App() {
   return (
     <Routes>
-      {/* Public */}
-      <Route path="/"              element={<RootRedirect />} />
+      {/* Public — Landing always shows at /, logged-in users can still visit it */}
+      <Route path="/"              element={<Landing />} />
       <Route path="/login"         element={<GuestRoute><Login /></GuestRoute>} />
       <Route path="/register"      element={<GuestRoute><Register /></GuestRoute>} />
       <Route path="/login-success" element={<LoginSuccess />} />
