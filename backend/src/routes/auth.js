@@ -45,14 +45,14 @@ router.post('/register', [
 
     if (await User.findOne({ email }))
       return res.status(409).json({ success:false, message:'Email already registered.' });
-    if (handle && await User.findOne({ handle: handle.toLowerCase() }))
-      return res.status(409).json({ success:false, message:'Handle taken.' });
+    // If handle is already taken, just ignore it — don't block registration
+    const handleAvailable = handle ? !(await User.findOne({ handle: handle.toLowerCase() })) : false;
 
     const user = new User({
       displayName, email, password, role,
       niche:       role==='creator' ? niche : '',
       companyName: role==='brand' ? (companyName||displayName) : '',
-      handle:      handle ? handle.toLowerCase() : undefined,
+      handle:      (handle && handleAvailable) ? handle.toLowerCase() : undefined,
     });
 
     if (role==='creator') {
