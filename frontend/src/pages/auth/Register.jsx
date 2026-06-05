@@ -397,7 +397,6 @@ export default function Register() {
 
             {form.role==='creator' && (
               <>
-                <Input label="Username / Handle" value={form.handle} onChange={upd('handle')} placeholder="priyatech" hint="Optional — your public @handle" />
                 <div className="form-group">
                   <label className="form-label">Creator Niche *</label>
                   <select className="form-input" value={form.niche} onChange={upd('niche')}>
